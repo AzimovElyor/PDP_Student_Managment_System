@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PdpStudentManagmentSystemApplication {
 
     public static void main(String[] args) {
+        System.out.println("EHello");
         SpringApplication.run(PdpStudentManagmentSystemApplication.class, args);
     }
 
