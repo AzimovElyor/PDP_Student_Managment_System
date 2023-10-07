@@ -7,6 +7,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;
 
+import java.time.LocalDate;
+
 
 @Entity
 @AllArgsConstructor
@@ -22,5 +24,6 @@ public class Student extends BaseEntity{
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.STUDENT;
+    private LocalDate dateOfBirth;
     private Boolean isActive = true;
 }

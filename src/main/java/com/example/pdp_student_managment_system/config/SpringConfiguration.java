@@ -1,5 +1,6 @@
 package com.example.pdp_student_managment_system.config;
 
+import com.example.pdp_student_managment_system.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,12 +9,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SpringConfiguration {
-    // bu yerga jwtFilter kelishi kerak
+    private final JwtFilter jwtFilter;
     private final String [] WHILE_URL =
             {"/api/v1/auth/register","/api/v1/auth/login",
                     "/post/link/{link}","/post/get-all"
@@ -28,7 +30,7 @@ public class SpringConfiguration {
                                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement-> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                //jwt filterni spring ni filteridan oldin register qilish kerak
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
