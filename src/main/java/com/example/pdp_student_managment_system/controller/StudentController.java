@@ -1,3 +1,4 @@
+
 package com.example.pdp_student_managment_system.controller;
 
 import com.example.pdp_student_managment_system.dto.StudentRequestDto;
@@ -17,12 +18,12 @@ import java.util.List;
 public class StudentController {
     private final StudentService studentService;
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('STUDENT_CREATE')")
    public ResponseEntity<String> create(@RequestBody StudentRequestDto studentRequestDto){
       studentService.create(studentRequestDto);
       return new ResponseEntity<>("Successfully added",HttpStatus.CREATED);
   }
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasRole('ADMIN') and hasAuthority('ALL_STUDENTS') or hasRole('SUPER_ADMIN')")
   @GetMapping("/get-all")
     public ResponseEntity<List<StudentResponseDto>> getAllStudent(
             @RequestParam(required = false, defaultValue = "0") int page,
