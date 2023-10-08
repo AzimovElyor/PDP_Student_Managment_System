@@ -1,7 +1,6 @@
 package com.example.pdp_student_managment_system.service;
 
 import com.example.pdp_student_managment_system.entity.MailEntity;
-import com.example.pdp_student_managment_system.entity.UserEntity;
 import com.example.pdp_student_managment_system.exception.EmailSendingMessageException;
 import com.example.pdp_student_managment_system.repository.MaileRepository;
 import com.example.pdp_student_managment_system.repository.UserRepository;
