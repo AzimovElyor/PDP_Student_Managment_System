@@ -1,11 +1,13 @@
 server:
   port: 9090
 spring:
+# datasource properties
   datasource:
     url: jdbc:postgresql://localhost:5432/course_management
     username: course_user
     password: 1234
     driver-class-name: org.postgresql.Driver
+# data jpa properties
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,6 +15,19 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+# sending email properties
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: elyorazimov098@gmail.com
+    password: sxhqapohdlgduupf
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+# jwt token properties
 jwt:
   expired: 3600000
   secret-key: lvNl4kXThUiIuXCoL1ticadNTD2qByyFIUMuz31F8wgydgwsbhjsbhjasbhjsbhjxbhjxvhsxvhjsvshvshvdghvdghdvgh

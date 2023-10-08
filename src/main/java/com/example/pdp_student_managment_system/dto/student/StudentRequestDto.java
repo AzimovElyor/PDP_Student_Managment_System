@@ -1,4 +1,4 @@
-package com.example.pdp_student_managment_system.dto;
+package com.example.pdp_student_managment_system.dto.student;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
