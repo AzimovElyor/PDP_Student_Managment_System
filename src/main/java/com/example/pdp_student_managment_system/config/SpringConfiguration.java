@@ -17,8 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SpringConfiguration {
     private final JwtFilter jwtFilter;
     private final String [] WHILE_URL =
-            {"/api/v1/auth/register","/api/v1/auth/login",
-                    "/post/link/{link}","/post/get-all"
+            {"/mail/verification",
+             "/api/v1/auth/login"
             };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -29,8 +29,8 @@ public class SpringConfiguration {
                                 authRequest.requestMatchers(WHILE_URL).permitAll()
                                         .anyRequest().authenticated()
                 )
-                .sessionManagement(sessionManagement-> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(sessionManagement-> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
 }

@@ -1,6 +1,5 @@
 package com.example.pdp_student_managment_system.repository;
 
-import com.example.pdp_student_managment_system.dto.StudentRequestDto;
 import com.example.pdp_student_managment_system.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 

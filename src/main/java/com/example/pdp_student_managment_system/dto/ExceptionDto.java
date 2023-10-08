@@ -1,4 +1,4 @@
-package com.example.post.dto;
+package com.example.pdp_student_managment_system.dto;
 
 import lombok.*;
 

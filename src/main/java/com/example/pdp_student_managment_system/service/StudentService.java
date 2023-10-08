@@ -1,7 +1,7 @@
 package com.example.pdp_student_managment_system.service;
 
-import com.example.pdp_student_managment_system.dto.StudentRequestDto;
-import com.example.pdp_student_managment_system.dto.StudentResponseDto;
+import com.example.pdp_student_managment_system.dto.student.StudentRequestDto;
+import com.example.pdp_student_managment_system.dto.student.StudentResponseDto;
 import com.example.pdp_student_managment_system.entity.Student;
 import com.example.pdp_student_managment_system.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;

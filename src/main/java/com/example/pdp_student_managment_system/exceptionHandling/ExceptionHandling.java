@@ -1,5 +1,7 @@
-package com.example.post.exceptionHandling;
+package com.example.pdp_student_managment_system.exceptionHandling;
 
+import com.example.pdp_student_managment_system.exception.InCorrectPermissionsException;
+import com.example.pdp_student_managment_system.exception.NoVerificationException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +10,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import com.example.post.dto.ExceptionDto;
+import com.example.pdp_student_managment_system.dto.ExceptionDto;
 
 
 import java.util.ArrayList;
@@ -40,6 +42,16 @@ public class ExceptionHandling {
     public ResponseEntity<ExceptionDto> handlerUserNotFoundException(UsernameNotFoundException exception){
         ExceptionDto exceptionDto = new ExceptionDto(exception.getMessage(), HttpStatus.UNAUTHORIZED.value());
         return new ResponseEntity<>(exceptionDto,HttpStatus.UNAUTHORIZED);
+    }
+    @ExceptionHandler(NoVerificationException.class)
+    public ResponseEntity<ExceptionDto> verificationExceptionHandling(NoVerificationException exception){
+        ExceptionDto exceptionDto = new ExceptionDto(exception.getMessage(), HttpStatus.UNAUTHORIZED.value());
+        return new ResponseEntity<>(exceptionDto,HttpStatus.UNAUTHORIZED);
+    }
+    @ExceptionHandler(InCorrectPermissionsException.class)
+    public ResponseEntity<ExceptionDto> permissionExceptionHandling(InCorrectPermissionsException exception){
+        ExceptionDto exceptionDto = new ExceptionDto(exception.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(exceptionDto,HttpStatus.BAD_REQUEST);
     }
 
 }
