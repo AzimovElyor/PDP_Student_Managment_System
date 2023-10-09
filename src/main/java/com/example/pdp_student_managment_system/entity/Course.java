@@ -1,10 +1,11 @@
 package com.example.pdp_student_managment_system.entity;
 
 import com.example.pdp_student_managment_system.enums.CourseName;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
-
-import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -12,10 +13,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class Course {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+public class Course extends BaseEntity {
+    @Column(unique = true,nullable = false)
     @Enumerated(EnumType.STRING)
     private CourseName courseName;
     private Integer duration;

@@ -18,7 +18,8 @@ public class SpringConfiguration {
     private final JwtFilter jwtFilter;
     private final String [] WHILE_URL =
             {"/mail/verification",
-             "/api/v1/auth/login"
+             "/api/v1/auth/login",
+             "/course/get-all"
             };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
