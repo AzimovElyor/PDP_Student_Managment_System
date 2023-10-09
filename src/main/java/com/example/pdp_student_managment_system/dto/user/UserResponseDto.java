@@ -17,7 +17,7 @@ public class UserResponseDto {
     private UUID id;
     private String fullName;
     private String email;
-    private UserRole userRole;
+    private UserRole role;
     private Set<Permissions> permissions;
     private Boolean isActive;
     private Boolean isVerification;

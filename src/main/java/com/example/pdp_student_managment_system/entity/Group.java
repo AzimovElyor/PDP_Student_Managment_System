@@ -4,9 +4,11 @@ import com.example.pdp_student_managment_system.enums.GroupStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "groups")
+@Entity(name = "Groups")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -18,11 +20,12 @@ public class Group extends BaseEntity{
     @ManyToOne(fetch = FetchType.EAGER)
     private UserEntity mentor;
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private List<Student> students;
+    private List<Student> students = new ArrayList<>();
     @ManyToOne(fetch = FetchType.EAGER)
     private Course course;
     @Enumerated(EnumType.STRING)
     private GroupStatus groupStatus = GroupStatus.CREATED;
-    private Integer moduleNum;
+    private Integer moduleNum = 0;
+    private LocalDateTime startedDate;
 
 }

@@ -18,11 +18,14 @@ import java.util.List;
 public class StudentService {
     private final StudentRepository studentRepository;
     private final ModelMapper modelMapper;
-    public void create(StudentRequestDto studentRequestDto){
+    public StudentResponseDto create(StudentRequestDto studentRequestDto){
         if (studentRepository.existsByPhoneNumber(studentRequestDto.getPhoneNumber())) {
             throw new RuntimeException("Phone number already exists");
         }
-       modelMapper.map(studentRequestDto, Student.class);
+        Student student = modelMapper.map(studentRequestDto, Student.class);
+        student.setPhoneNumber("+998" + student.getPhoneNumber());
+        studentRepository.save(student);
+        return new StudentResponseDto(student);
     }
     public List<StudentResponseDto> getAll(int page, int size){
         Pageable pageable = PageRequest.of(page, size);

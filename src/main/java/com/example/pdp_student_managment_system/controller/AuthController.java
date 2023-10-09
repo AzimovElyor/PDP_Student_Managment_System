@@ -3,6 +3,7 @@ package com.example.pdp_student_managment_system.controller;
 import com.example.pdp_student_managment_system.dto.LoginDto;
 import com.example.pdp_student_managment_system.dto.jwt.JwtResponse;
 import com.example.pdp_student_managment_system.dto.user.UserRequestDto;
+import com.example.pdp_student_managment_system.dto.user.UserResponseDto;
 import com.example.pdp_student_managment_system.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class AuthController {
     private final AuthService authService;
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/register")
-    public ResponseEntity<JwtResponse> create(@Valid @RequestBody UserRequestDto userRequestDto){
+    public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserRequestDto userRequestDto){
         return new ResponseEntity<>(authService.register(userRequestDto), HttpStatus.CREATED);
     }
     @PostMapping("/login")
