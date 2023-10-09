@@ -1,9 +1,7 @@
 package com.example.pdp_student_managment_system.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
 
 import java.util.Set;
 
@@ -45,6 +43,7 @@ public enum Permissions {
 
     ADD_COURSE(Set.of(UserRole.ADMIN)),
     DELETE_COURSE(Set.of(UserRole.ADMIN)),
+    UPDATE_COURSE(Set.of(UserRole.ADMIN)),
 
     ADD_ADMIN(Set.of(UserRole.SUPER_ADMIN)),
     BLOCK_ADMIN(Set.of(UserRole.SUPER_ADMIN)),

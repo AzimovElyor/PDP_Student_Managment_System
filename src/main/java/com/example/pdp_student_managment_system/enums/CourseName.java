@@ -5,5 +5,7 @@ public enum CourseName {
     PYTHON,
     DOT_NET,
     FOUNDATION,
-    FRONTEND;
+    FRONTEND,
+    ANDROID,
+    FLUTTER
 }
