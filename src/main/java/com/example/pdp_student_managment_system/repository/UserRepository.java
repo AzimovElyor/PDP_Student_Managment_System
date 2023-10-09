@@ -1,6 +1,7 @@
 package com.example.pdp_student_managment_system.repository;
 
 import com.example.pdp_student_managment_system.entity.UserEntity;
+import com.example.pdp_student_managment_system.enums.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,5 +17,6 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     @Query(value = "update UserEntity u set u.isVerification = true , u.updatedDate=current_timestamp " +
             "where u.email = :email")
      void updateVerification(@Param("email") String email);
+    Optional<UserEntity> findByIdAndIsActiveTrueAndRoleAndIsVerificationTrue(UUID id, UserRole role);
 
 }

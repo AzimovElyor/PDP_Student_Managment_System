@@ -3,6 +3,7 @@ package com.example.pdp_student_managment_system.service;
 import com.example.pdp_student_managment_system.dto.LoginDto;
 import com.example.pdp_student_managment_system.dto.jwt.JwtResponse;
 import com.example.pdp_student_managment_system.dto.user.UserRequestDto;
+import com.example.pdp_student_managment_system.dto.user.UserResponseDto;
 import com.example.pdp_student_managment_system.entity.UserEntity;
 import com.example.pdp_student_managment_system.enums.Permissions;
 import com.example.pdp_student_managment_system.enums.UserRole;
@@ -32,7 +33,7 @@ public class AuthService {
     private ExecutorService executorService = Executors.newFixedThreadPool(10);
 
 
-    public JwtResponse register(UserRequestDto userRequestDto) {
+    public UserResponseDto register(UserRequestDto userRequestDto) {
         Boolean existEmail = userRepository.existsByEmail(userRequestDto.getEmail());
         if(existEmail){
             throw new RuntimeException("Email already exists");
@@ -45,8 +46,9 @@ public class AuthService {
         UserEntity user = modelMapper.map(userRequestDto, UserEntity.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-       return JwtResponse.builder().token(jwtService.generateToken(user)).build();
-
+        UserResponseDto response = modelMapper.map(user, UserResponseDto.class);
+        response.setFullName(user.getName() + " " + user.getSurname());
+        return response;
     }
     private boolean isPermissionsValid(UserRole userRole, Set<Permissions> permissions){
       return  permissions.stream()

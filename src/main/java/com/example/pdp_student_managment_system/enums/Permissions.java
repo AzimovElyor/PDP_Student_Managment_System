@@ -36,7 +36,7 @@ public enum Permissions {
     START_GROUP(
            Set.of(UserRole.ADMIN)
    ),
-    UPDATE_GROUP(Set.of(UserRole.ADMIN)),
+    FINISH_GROUP(Set.of(UserRole.ADMIN)),
 
     START_LESSON(Set.of(UserRole.MENTOR)),
     FINISH_LESSON(Set.of(UserRole.MENTOR)),

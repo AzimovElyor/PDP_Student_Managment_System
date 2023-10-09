@@ -19,9 +19,8 @@ public class StudentController {
     private final StudentService studentService;
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN') and hasAuthority('STUDENT_CREATE')")
-   public ResponseEntity<String> create(@RequestBody StudentRequestDto studentRequestDto){
-      studentService.create(studentRequestDto);
-      return new ResponseEntity<>("Successfully added",HttpStatus.CREATED);
+   public ResponseEntity<StudentResponseDto> create(@RequestBody StudentRequestDto studentRequestDto){
+      return new ResponseEntity<>(studentService.create(studentRequestDto),HttpStatus.CREATED);
   }
   @PreAuthorize("hasRole('ADMIN') and hasAuthority('ALL_STUDENTS') or hasRole('SUPER_ADMIN')")
   @GetMapping("/get-all")
