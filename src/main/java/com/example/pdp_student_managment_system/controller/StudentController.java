@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/student")
@@ -29,6 +30,12 @@ public class StudentController {
             @RequestParam(required = false, defaultValue = "10") int size
   ){
     return new ResponseEntity<>(studentService.getAll(page,size), HttpStatus.OK);
+  }
+  @PreAuthorize("hasRole('ADMIN') and hasAuthority('STUDENT_DELETE')")
+  @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable UUID id){
+        studentService.delete(id);
+        return ResponseEntity.ok("Successfully deleted");
   }
 
 }

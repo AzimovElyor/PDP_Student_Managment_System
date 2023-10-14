@@ -80,6 +80,9 @@ public class GroupService {
             .orElseThrow(() -> new RuntimeException("Group not found or group status finished"));
     Student student = studentRepository.findById(studentId)
             .orElseThrow(() -> new RuntimeException("Student not found"));
+    if (group.getGroupStatus() == GroupStatus.FINISHED) {
+      throw new RuntimeException("Group is finished");
+    }
     if(group.getStudents().size() > maxStudentCount ){
       throw new RuntimeException("there were already "+ maxStudentCount + " students in the group");
     }
@@ -116,6 +119,22 @@ public class GroupService {
     group.setGroupStatus(GroupStatus.FINISHED);
     groupRepository.save(group);
   }
+  public List<GroupResponseDto> getMentorsGroup(UUID mentorId, GroupStatus groupStatus) {
+    userRepository.findById(mentorId)
+            .orElseThrow(() -> new RuntimeException("Mentor not found"));
+    List<Group> mentorGroups = groupRepository.findByMentorIdAndGroupStatus(mentorId, groupStatus);
+    return mentorGroups.stream()
+            .map(this::mapToGroupResponse)
+            .toList();
+  }
+  public List<GroupResponseDto> getStudentGroups(UUID studentId, GroupStatus groupStatus){
+    studentRepository.findById(studentId)
+            .orElseThrow(() -> new RuntimeException("Student not found"));
+    List<Group> studentsGroups = groupRepository.getStudentsGroups(groupStatus, studentId);
+    return studentsGroups.stream()
+            .map(this::mapToGroupResponse)
+            .toList();
+  }
   private UserResponseDto mapToUserResponse(UserEntity user){
     UserResponseDto userResponseDto = modelMapper.map(user, UserResponseDto.class);
     userResponseDto.setFullName(user.getName() + " " +user.getSurname());
@@ -145,12 +164,14 @@ public class GroupService {
   }
   private void startFirstModule(Group group){
     for(int i = 1; i <= moduleLessons; i++ ){
-      Lesson entity = new Lesson(group, i, group.getModuleNum(), LessonStatus.CREATED);
+
+      Lesson entity = new Lesson(group, i, group.getModuleNum(), LessonStatus.CREATED,null);
       System.out.println("entity = " + entity);
       lessonRepository.save(entity);
     }
 
   }
+
 
 
 }
