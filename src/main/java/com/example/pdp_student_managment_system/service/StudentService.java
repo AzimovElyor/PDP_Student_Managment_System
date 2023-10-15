@@ -35,6 +35,11 @@ public class StudentService {
                 .map(StudentResponseDto::new)
                 .toList();
     }
+    public StudentResponseDto findById(UUID id){
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+        return new StudentResponseDto(student);
+    }
 
     public void delete(UUID id) {
         Student student = studentRepository.findById(id)
