@@ -7,12 +7,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface GroupRepository extends JpaRepository<Group, UUID> {
   Boolean existsByGroupName(String groupName);
- /* Optional<Group> findByIdAndGroupStatusIn(UUID id, List<GroupStatus> groupStatus);*/
+  List<Group> findByMentorIdAndGroupStatus(UUID mentorId,GroupStatus status);
+  @Query(nativeQuery = true,
+       value =   """
+select g from groups g
+inner join groups_students gs on  gs.groups_id = g.id
+where gs.students_id = :studentId and g.group_status = :groupStatus
+"""
+  )
+  List<Group> getStudentsGroups(GroupStatus groupStatus,UUID studentId);
   @Query(value = """
  select exists(select s from student s
  inner join groups_students gs on s.id = gs.students_id

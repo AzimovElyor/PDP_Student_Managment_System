@@ -2,6 +2,7 @@ package com.example.pdp_student_managment_system.controller;
 
 import com.example.pdp_student_managment_system.dto.group.GroupRequestDto;
 import com.example.pdp_student_managment_system.dto.group.GroupResponseDto;
+import com.example.pdp_student_managment_system.enums.GroupStatus;
 import com.example.pdp_student_managment_system.service.GroupService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,22 @@ public class GroupController {
     public ResponseEntity<String> finishGroup(@PathVariable UUID id){
         groupService.finishGroup(id);
         return ResponseEntity.ok("Successfully finished group");
+    }
+    @PreAuthorize("hasAnyRole('MENTOR','ADMIN') and hasAuthority('GROUP_STUDENTS') or hasRole('SUPER_ADMIN') ")
+    @GetMapping("/mentor-groups/{mentorId}")
+    public ResponseEntity<List<GroupResponseDto>> mentorsGroups(
+            @PathVariable UUID mentorId,
+            @RequestParam(required = false,defaultValue = "IN_PROGRESS")GroupStatus groupStatus
+            ){
+        return new ResponseEntity<>(groupService.getMentorsGroup(mentorId,groupStatus),HttpStatus.OK);
+    }
+    @PreAuthorize("hasAuthority('STUDENT_GROUP') or hasRole('SUPER_ADMIN')")
+    @GetMapping("/student-groups/{studentId}")
+    public ResponseEntity<List<GroupResponseDto>> studentGroups(
+            @PathVariable UUID studentId,
+            @RequestParam(required = false,defaultValue = "IN_PROGRESS")GroupStatus groupStatus
+            ){
+        return new ResponseEntity<>(groupService.getStudentGroups(studentId,groupStatus),HttpStatus.OK);
     }
 }
 

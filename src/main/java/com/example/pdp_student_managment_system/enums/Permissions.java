@@ -23,6 +23,9 @@ public enum Permissions {
    DELETE_STUDENT_GROUP(
            Set.of(UserRole.ADMIN)
    ),
+    STUDENT_GROUP(
+            Set.of(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+    ),
     ADD_MENTOR_GROUP(
             Set.of(UserRole.ADMIN)
     ),
@@ -40,6 +43,7 @@ public enum Permissions {
 
     START_LESSON(Set.of(UserRole.MENTOR)),
     FINISH_LESSON(Set.of(UserRole.MENTOR)),
+    GROUP_LESSONS(Set.of(UserRole.ADMIN,UserRole.MENTOR)),
 
     ADD_COURSE(Set.of(UserRole.ADMIN)),
     DELETE_COURSE(Set.of(UserRole.ADMIN)),

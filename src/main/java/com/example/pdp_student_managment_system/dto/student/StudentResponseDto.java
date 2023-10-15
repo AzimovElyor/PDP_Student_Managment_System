@@ -23,7 +23,7 @@ public class StudentResponseDto {
     private LocalDateTime createdDate;
     public StudentResponseDto(Student student){
         this.id = student.getId();
-        this.fullName = student.getName() + student.getSurname();
+        this.fullName = student.getName() + " " + student.getSurname();
         this.phoneNumber = student.getPhoneNumber();
         this.age = Period.between(student.getDateOfBirth(), LocalDate.now()).getYears();
         this.isActive = student.getIsActive();

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,18 @@ public class StudentService {
      return    all.get()
                 .map(StudentResponseDto::new)
                 .toList();
+    }
+    public StudentResponseDto findById(UUID id){
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+        return new StudentResponseDto(student);
+    }
+
+    public void delete(UUID id) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+        student.setIsActive(false);
+        studentRepository.save(student);
     }
 
 }

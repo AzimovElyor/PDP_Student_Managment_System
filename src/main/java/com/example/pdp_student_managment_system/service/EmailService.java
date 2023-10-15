@@ -1,6 +1,6 @@
 package com.example.pdp_student_managment_system.service;
 
-import com.example.pdp_student_managment_system.entity.MailEntity;
+import com.example.pdp_student_managment_system.entity.MailVerification;
 import com.example.pdp_student_managment_system.exception.EmailSendingMessageException;
 import com.example.pdp_student_managment_system.repository.MaileRepository;
 import com.example.pdp_student_managment_system.repository.UserRepository;
@@ -39,7 +39,7 @@ public class EmailService {
     @Transactional
     public String validatePassword(String email, String password){
        try {
-           MailEntity mail = maileRepository.findByEmail(email).
+           MailVerification mail = maileRepository.findByEmail(email).
                    orElseThrow(() -> new RuntimeException("Email not found"));
            if (!mail.getVerificationPassword().equals(password)) {
                throw new RuntimeException("Incorrect password");
@@ -60,11 +60,11 @@ public class EmailService {
         return password.toString();
     }
     private void saveMail(String email, String generatePassword){
-        Optional<MailEntity> byEmail = maileRepository.findByEmail(email);
+        Optional<MailVerification> byEmail = maileRepository.findByEmail(email);
         if(byEmail.isEmpty()){
-            maileRepository.save(new MailEntity(email,generatePassword));
+            maileRepository.save(new MailVerification(email,generatePassword));
         }else {
-            MailEntity mailEntity = byEmail.get();
+            MailVerification mailEntity = byEmail.get();
             mailEntity.setVerificationPassword(generatePassword);
             maileRepository.save(mailEntity);
         }
