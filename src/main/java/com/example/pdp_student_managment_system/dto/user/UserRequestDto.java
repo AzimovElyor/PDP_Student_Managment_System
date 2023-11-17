@@ -2,9 +2,7 @@ package com.example.pdp_student_managment_system.dto.user;
 
 import com.example.pdp_student_managment_system.enums.Permissions;
 import com.example.pdp_student_managment_system.enums.UserRole;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +18,9 @@ public class UserRequestDto {
     private String surname;
     @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$" ,message = "Incorrect email")
     private String email;
+    @Pattern(regexp = "^(95|99|90|94|88|33)[0-9]{7}$",message = "Invalid uzbek phone number")
+    @NotBlank(message = "Phone number must not be null or empty")
+    private String phoneNumber;
     @Size(min = 4,max = 16, message = "Password mmi length = {min} and max length= {max}")
     @NotNull(message = "Password must not be null")
     private String password;

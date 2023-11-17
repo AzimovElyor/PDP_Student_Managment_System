@@ -1,5 +1,6 @@
 package com.example.pdp_student_managment_system.controller;
 
+import com.example.pdp_student_managment_system.dto.PageDto;
 import com.example.pdp_student_managment_system.dto.course.CourseRequestDto;
 import com.example.pdp_student_managment_system.dto.course.CourseResponseDto;
 import com.example.pdp_student_managment_system.service.CourseService;
@@ -25,8 +26,10 @@ public class CourseController {
 }
 
 @GetMapping("/get-all")
-    public ResponseEntity<List<CourseResponseDto>> getAllCourse(){
-    return ResponseEntity.ok(courseService.getAll());
+    public ResponseEntity<PageDto<CourseResponseDto>> getAllCourse(
+            @RequestParam(required = false,defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "7") Integer size) {
+    return ResponseEntity.ok(courseService.getAll(page,size));
 }
 @PreAuthorize("hasAuthority('UPDATE_COURSE') or hasRole('SUPER_ADMIN')")
 @PutMapping("/update-duration/{id}")
@@ -36,4 +39,5 @@ public class CourseController {
 ){
     return ResponseEntity.status(200).body(courseService.updateDuration(id,duration));
 }
+
 }

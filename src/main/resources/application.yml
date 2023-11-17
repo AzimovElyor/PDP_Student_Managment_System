@@ -3,9 +3,9 @@ server:
 spring:
 # datasource properties
   datasource:
-    url: jdbc:postgresql://localhost:5432/course_management
-    username: course_user
-    password: 1234
+    url: jdbc:postgresql://monorail.proxy.rlwy.net:28762/railway
+    username: postgres
+    password: D1D44Gf3AffaDEbdGFDE36Cad-aeABDb
     driver-class-name: org.postgresql.Driver
 # data jpa properties
   jpa:
@@ -20,7 +20,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: elyorazimov098@gmail.com
-    password: sxhqapohdlgduupf
+    password: waldruhjxdqjvvri
     properties:
       mail:
         smtp:
@@ -29,9 +29,12 @@ spring:
           auth: true
 # jwt token properties
 jwt:
-  expired: 3600000
+  expired: 90000000
   secret-key: lvNl4kXThUiIuXCoL1ticadNTD2qByyFIUMuz31F8wgydgwsbhjsbhjasbhjsbhjxbhjxvhsxvhjsvshvshvdghvdghdvgh
-group:
-  max-student: 25
-  min-student : 10
-  module-lessons: 12
+twilio:
+  account_sid: AC4ffb1fd4a8be9fb6b02b769085b1cc54
+  auth_token: af1235ac73489a1c91e750b952bbb052
+  phone: +17174096109
+springdoc:
+  swagger-ui:
+    path: /swagger-ui

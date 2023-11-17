@@ -30,20 +30,21 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private String surname;
     @Column(unique = true,nullable = false)
     private String email;
+    @Column(unique = true, nullable = false)
+    private String phoneNumber;
     @Enumerated(EnumType.STRING)
     private UserRole role;
-    @Enumerated(EnumType.STRING)
-    private Set<Permissions> permissions;
     @Column(nullable = false)
+    private Set<Permissions> permissions;
     private String password;
-    private Boolean isActive = true;
     private Boolean isVerification = false;
+    private Boolean isBlocked =false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         HashSet<SimpleGrantedAuthority> roles= new HashSet<>(Set.of(new SimpleGrantedAuthority("ROLE_" + this.role)));
-       roles.addAll( permissions.
-                stream()
+       roles.addAll(permissions
+               .stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.name()))
                 .collect(Collectors.toSet())
        );
