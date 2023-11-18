@@ -17,5 +17,6 @@ public class Course extends BaseEntity {
     @Column(unique = true,nullable = false)
     @Enumerated(EnumType.STRING)
     private CourseName courseName;
+    private String description;
     private Integer duration;
 }

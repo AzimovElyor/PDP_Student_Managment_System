@@ -9,6 +9,7 @@ import lombok.*;
 @ToString
 @Builder
 public class ExceptionDto {
+  /*  private boolean isSuccess;*/
     private String message;
     private Integer statusCode;
 }

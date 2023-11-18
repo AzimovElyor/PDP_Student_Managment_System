@@ -19,7 +19,7 @@ import java.util.UUID;
 public class StudentController {
     private final StudentService studentService;
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN') and hasAuthority('STUDENT_CREATE')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('CREATE_STUDENT')")
    public ResponseEntity<StudentResponseDto> create(@RequestBody StudentRequestDto studentRequestDto){
       return new ResponseEntity<>(studentService.create(studentRequestDto),HttpStatus.CREATED);
   }

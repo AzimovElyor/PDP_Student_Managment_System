@@ -7,5 +7,8 @@ public enum CourseName {
     FOUNDATION,
     FRONTEND,
     ANDROID,
-    FLUTTER
+    FLUTTER,
+    SPRING,
+    DJANGO,
+    REACT
 }

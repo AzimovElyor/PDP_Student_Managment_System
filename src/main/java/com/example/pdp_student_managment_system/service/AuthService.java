@@ -41,7 +41,7 @@ public class AuthService {
         if(!isPermissionsValid(userRequestDto.getRole(),userRequestDto.getPermissions())){
             throw new InCorrectPermissionsException("Incorrect permissions");
         }
-        executorService.execute(() -> emailService.sendPasswordEmail(userRequestDto.getEmail()));
+        executorService.execute(() -> emailService.send(userRequestDto.getEmail()));
 
         UserEntity user = modelMapper.map(userRequestDto, UserEntity.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -51,9 +51,10 @@ public class AuthService {
         return response;
     }
     private boolean isPermissionsValid(UserRole userRole, Set<Permissions> permissions){
-      return  permissions.stream()
-                .allMatch(permission -> permission.getRoles().contains(userRole));
-
+        for (Permissions permission : permissions) {
+            if(!permission.getRoles().contains(userRole)) return false;
+        }
+        return true;
     }
 
     public JwtResponse login(LoginDto loginDto) {

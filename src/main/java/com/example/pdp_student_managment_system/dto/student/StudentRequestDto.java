@@ -14,7 +14,7 @@ public class StudentRequestDto {
    @NotNull(message = "Student name must not be empty or null")
     private String name;
     private String surname;
-    @Pattern(regexp = "^(95|99|90|94|88|33)}[0-9]{7}$")
+    @Pattern(regexp = "^(95|99|90|94|88|33)}[0-9]{7}$",message = "Invalid uzbek phone number")
     private String phoneNumber;
     @NotNull(message = "Student date of Birth must not be null")
     private LocalDate dateOfBirth;

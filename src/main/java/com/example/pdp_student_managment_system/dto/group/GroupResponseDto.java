@@ -28,5 +28,6 @@ public class GroupResponseDto {
     private Integer moduleNum;
     Integer studentCount ;
     private LocalDateTime startedDate;
+    private LocalDateTime finishedDate;
     private LocalDateTime createdDate;
 }

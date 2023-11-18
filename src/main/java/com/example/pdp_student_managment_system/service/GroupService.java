@@ -7,6 +7,7 @@ import com.example.pdp_student_managment_system.dto.student.StudentResponseDto;
 import com.example.pdp_student_managment_system.dto.user.UserResponseDto;
 import com.example.pdp_student_managment_system.entity.*;
 import com.example.pdp_student_managment_system.enums.GroupStatus;
+import com.example.pdp_student_managment_system.enums.GroupType;
 import com.example.pdp_student_managment_system.enums.LessonStatus;
 import com.example.pdp_student_managment_system.enums.UserRole;
 import com.example.pdp_student_managment_system.repository.*;
@@ -32,12 +33,8 @@ public class GroupService {
   private final LessonRepository lessonRepository;
   private final ModelMapper  modelMapper;
 
-  @Value("${group.max-student}")
-  Integer maxStudentCount;
-  @Value("${group.min-student}")
-  Integer minStudentCount;
-  @Value("${group.module-lessons}")
-  Integer moduleLessons;
+
+
 
 
   public GroupResponseDto create(GroupRequestDto groupRequestDto) {
@@ -49,24 +46,12 @@ public class GroupService {
 
     Course course = courseRepository.findById(groupRequestDto.getCourseId())
             .orElseThrow(() -> new RuntimeException("Course not found"));
-    Group group = new Group();
+    Group group = modelMapper.map(groupRequestDto,Group.class);
     group.setGroupName(groupRequestDto.getGroupName());
     group.setMentor(mentor);
     group.setCourse(course);
     groupRepository.save(group);
-    UserResponseDto mentorResponse = mapToUserResponse(group.getMentor());
-    CourseResponseDto courseResponse = mapToCourseResponse(group.getCourse());
-    return GroupResponseDto.builder()
-            .id(group.getId())
-            .groupName(group.getGroupName())
-            .mentor(mentorResponse)
-            .course(courseResponse)
-            .groupStatus(group.getGroupStatus())
-            .moduleNum(group.getModuleNum())
-            .startedDate(group.getStartedDate())
-            .createdDate(group.getCreatedDate())
-            .studentCount(0)
-            .build();
+    return mapToGroupResponse(group);
   }
   public List<GroupResponseDto> getAll(Integer page, Integer size){
     Pageable pageable = PageRequest.of(page,size);
@@ -83,8 +68,8 @@ public class GroupService {
     if (group.getGroupStatus() == GroupStatus.FINISHED) {
       throw new RuntimeException("Group is finished");
     }
-    if(group.getStudents().size() > maxStudentCount ){
-      throw new RuntimeException("there were already "+ maxStudentCount + " students in the group");
+    if(group.getStudents().size() > group.getMaxStudentCount() ){
+      throw new RuntimeException("there were already "+ group.getMaxStudentCount() + " students in the group");
     }
     if (groupRepository.existStudent(studentId,groupId)) {
       throw new RuntimeException("Student already in group");
@@ -100,8 +85,8 @@ public class GroupService {
     if(group.getGroupStatus() != GroupStatus.CREATED){
       throw new RuntimeException("Group already started or finished");
     }
-    if (!(group.getStudents().size()  >= minStudentCount)) {
-          throw new RuntimeException("there should be at least " + minStudentCount + " students in the group");
+    if (!(group.getStudents().size()  >= group.getMinStudentCount())) {
+          throw new RuntimeException("there should be at least " + group.getMinStudentCount() + " students in the group");
     }
 
     group.setGroupStatus(GroupStatus.IN_PROGRESS);
@@ -163,8 +148,8 @@ public class GroupService {
             .build();
   }
   private void startFirstModule(Group group){
-    for(int i = 1; i <= moduleLessons; i++ ){
-
+    int moduleLessons = group.getGroupType()== GroupType.BOOTCAMP ? GroupType.BOOTCAMP.getModuleLessons():GroupType.ROADMAP.getModuleLessons();
+    for(int i = 1; i <= moduleLessons ; i++ ){
       Lesson entity = new Lesson(group, i, group.getModuleNum(), LessonStatus.CREATED,null);
       System.out.println("entity = " + entity);
       lessonRepository.save(entity);

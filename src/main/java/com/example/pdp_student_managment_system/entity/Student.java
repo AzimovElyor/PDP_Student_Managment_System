@@ -25,5 +25,4 @@ public class Student extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.STUDENT;
     private LocalDate dateOfBirth;
-    private Boolean isActive = true;
 }

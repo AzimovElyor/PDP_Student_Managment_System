@@ -31,8 +31,7 @@ public class LessonService {
     private final GroupRepository groupRepository;
     private final StudentAttendanceRepository studentAttendanceRepository;
     private final StudentRepository studentRepository;
-    @Value("${group.module-lessons}")
-    Integer moduleLessons;
+
     public void finishLesson(FinishLessonDto lessonDto){
 
            Lesson lesson = lessonRepository.findById(lessonDto.getId())
@@ -43,10 +42,10 @@ public class LessonService {
            if (lesson.getLessonStatus() != LessonStatus.STARTED) {
                throw new RuntimeException("Lesson not started or already finished");
            }
-           if (lesson.getLessonNumber().equals(moduleLessons) && group.getModuleNum().equals(group.getCourse().getDuration())) {
+           if (lesson.getLessonNumber().equals(group.getGroupType().getModuleLessons()) && group.getModuleNum().equals(group.getCourse().getDuration())) {
                group.setGroupStatus(GroupStatus.FINISHED);
                groupRepository.save(group);
-           } else if (lesson.getLessonNumber().equals(moduleLessons)) {
+           } else if (lesson.getLessonNumber().equals(group.getGroupType().getModuleLessons())) {
                createNewModuleLessons(lesson.getModuleNumber() + 1, group);
            }
            lesson.setLessonStatus(LessonStatus.FINISHED);
@@ -74,9 +73,7 @@ public class LessonService {
     public List<LessonResponseDto> getGroupLessons(UUID groupId){
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new RuntimeException("Group not found"));
-        if(!(group.getGroupStatus() == GroupStatus.IN_PROGRESS)){
-            throw new RuntimeException("Group no started or group is finished");
-        }
+
         List<Lesson> moduleLessons = lessonRepository.findByGroupIdAndModuleNumber(groupId,group.getModuleNum());
         return moduleLessons.stream()
                 .map(this::mapLessonToResponse)
@@ -125,7 +122,7 @@ public class LessonService {
     }
 
     private void createNewModuleLessons(Integer nextModuleNumber,Group group){
-        for(int i = 1; i <= moduleLessons; i++ ){
+        for(int i = 1; i <= group.getGroupType().getModuleLessons(); i++ ){
             Lesson entity = new Lesson(group, i, nextModuleNumber, LessonStatus.CREATED,null);
             System.out.println("entity = " + entity);
             lessonRepository.save(entity);

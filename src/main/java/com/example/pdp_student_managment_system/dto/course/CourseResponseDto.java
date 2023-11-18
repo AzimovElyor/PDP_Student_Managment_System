@@ -13,6 +13,7 @@ import java.util.UUID;
 public class CourseResponseDto {
     private UUID id;
     private CourseName courseName;
+    private String description;
     private Integer duration;
     private LocalDateTime createdDate;
 }
