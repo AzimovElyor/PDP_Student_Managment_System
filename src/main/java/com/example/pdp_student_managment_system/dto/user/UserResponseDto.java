@@ -1,5 +1,6 @@
 package com.example.pdp_student_managment_system.dto.user;
 
+import com.example.pdp_student_managment_system.enums.CourseName;
 import com.example.pdp_student_managment_system.enums.Permissions;
 import com.example.pdp_student_managment_system.enums.UserRole;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class UserResponseDto {
     private String email;
     private UserRole role;
     private Set<Permissions> permissions;
+    private Set<CourseName> languages;
     private Boolean isActive;
     private Boolean isVerification;
     private LocalDateTime createdDate;

@@ -44,7 +44,7 @@ public class CourseService {
         );
         pageCourse.setSorted(false);
         pageCourse.setPageNumber(page);
-        pageCourse.setTotalElement(all.getTotalElements());
+        pageCourse.setTotalElements(all.getTotalElements());
         pageCourse.setSize(size);
         return pageCourse;
     }

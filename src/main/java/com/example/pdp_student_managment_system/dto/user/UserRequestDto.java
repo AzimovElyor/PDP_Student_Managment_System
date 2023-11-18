@@ -1,5 +1,6 @@
 package com.example.pdp_student_managment_system.dto.user;
 
+import com.example.pdp_student_managment_system.enums.CourseName;
 import com.example.pdp_student_managment_system.enums.Permissions;
 import com.example.pdp_student_managment_system.enums.UserRole;
 import jakarta.validation.constraints.*;
@@ -24,6 +25,7 @@ public class UserRequestDto {
     @Size(min = 4,max = 16, message = "Password mmi length = {min} and max length= {max}")
     @NotNull(message = "Password must not be null")
     private String password;
+    private Set<CourseName> languages;
     @NotNull(message = "Role must not be null")
     private UserRole role;
     @NotNull(message = "Permission must not be null")
