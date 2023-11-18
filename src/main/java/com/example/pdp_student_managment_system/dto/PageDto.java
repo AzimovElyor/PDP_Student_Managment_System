@@ -15,6 +15,9 @@ public class PageDto<T> {
     private Integer pageNumber;
     private Integer size;
     private List<T> content;
-    private Long totalElement;
-
+    private Long totalElements;
+    private Integer totalPages;
+    private boolean last;
+    private boolean first;
+    private Long offset;
 }

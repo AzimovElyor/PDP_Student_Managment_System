@@ -58,7 +58,7 @@ public class PdpStudentManagmentSystemApplication {
         System.out.println(LocalDateTime.now());
 
     }
-    /*@Bean*/
+   /* @Bean*/
     public CommandLineRunner commandLineRunner(AuthService authService){
 
         return args -> {

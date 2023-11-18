@@ -11,6 +11,7 @@ import com.example.pdp_student_managment_system.exception.InCorrectPermissionsEx
 import com.example.pdp_student_managment_system.exception.NoVerificationException;
 import com.example.pdp_student_managment_system.jwt.JwtService;
 import com.example.pdp_student_managment_system.repository.UserRepository;
+import com.example.pdp_student_managment_system.util.MessageConstants;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,17 +31,21 @@ public class AuthService {
     private final JwtService jwtService;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
-    private ExecutorService executorService = Executors.newFixedThreadPool(10);
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
 
     public UserResponseDto register(UserRequestDto userRequestDto) {
         Boolean existEmail = userRepository.existsByEmail(userRequestDto.getEmail());
         if(existEmail){
-            throw new RuntimeException("Email already exists");
+            throw new RuntimeException(MessageConstants.EMAIL_EXISTS.formatted(userRequestDto.getEmail()));
         }
         if(!isPermissionsValid(userRequestDto.getRole(),userRequestDto.getPermissions())){
-            throw new InCorrectPermissionsException("Incorrect permissions");
+            throw new InCorrectPermissionsException(MessageConstants.INCORRECT_PERMISSIONS);
         }
+        if(userRequestDto.getRole()==UserRole.MENTOR && (userRequestDto.getLanguages() == null
+                || userRequestDto.getLanguages().isEmpty() ))
+            throw new RuntimeException(MessageConstants.MENTOR_LANGUAGE);
+
         executorService.execute(() -> emailService.send(userRequestDto.getEmail()));
 
         UserEntity user = modelMapper.map(userRequestDto, UserEntity.class);
@@ -59,15 +64,15 @@ public class AuthService {
 
     public JwtResponse login(LoginDto loginDto) {
         UserEntity user = userRepository.findByEmail(loginDto.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(MessageConstants.USER_NOT_FOUND));
         if(!passwordEncoder.matches(loginDto.getPassword(),user.getPassword())){
-            throw new UsernameNotFoundException("User not found");
+            throw new UsernameNotFoundException(MessageConstants.USER_NOT_FOUND);
         }
         if(!user.getIsActive()){
-            throw new RuntimeException("You is blocked");
+            throw new RuntimeException(MessageConstants.USER_BLOCK);
         }
         if(!user.getIsVerification()){
-            throw new NoVerificationException("You have not yet verified your email");
+            throw new NoVerificationException(MessageConstants.NO_VERIFY);
         }
         return new JwtResponse(jwtService.generateToken(user));
 

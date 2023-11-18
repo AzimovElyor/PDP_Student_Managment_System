@@ -1,5 +1,6 @@
 package com.example.pdp_student_managment_system.entity;
 
+import com.example.pdp_student_managment_system.enums.CourseName;
 import com.example.pdp_student_managment_system.enums.Permissions;
 import com.example.pdp_student_managment_system.enums.UserRole;
 import jakarta.persistence.Column;
@@ -35,7 +36,10 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Set<Permissions> permissions;
+    @Enumerated(EnumType.STRING)
+    private Set<CourseName> languages;
     private String password;
     private Boolean isVerification = false;
     private Boolean isBlocked =false;
