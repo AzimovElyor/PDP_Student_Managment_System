@@ -24,9 +24,17 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findByIdAndIsActiveTrueAndRoleAndIsVerificationTrue(UUID id, UserRole role);
     Optional<UserEntity> findByIdAndIsActiveTrue(UUID id);
     Page<UserEntity> getAllByIsActiveTrue(Pageable pageable);
-/*    Page<UserEntity>
-    findByNameContainingIgnoreCaseAndSurnameContainingIgnoreCaseAndEmailContainingIgnoreCaseAndRoleAndPhoneNumberContainingIgnoreCaseAndIsActiveTrue
-            (String name, String surname, String email, UserRole role, String  phoneNumber, Pageable pageable);*/
+    @Modifying
+    @Query(value = "update UserEntity u set u.isActive = false , u.updatedDate=current_timestamp where u.id = :id")
+       void deleteUserById(@Param("id") UUID id);
+    @Modifying
+    @Query(value = "update UserEntity u set u.password = :password , u.updatedDate=current_timestamp where u.id = :id")
+    void updatePassword(@Param("password") String password,@Param("id") UUID id);
+    @Modifying
+    @Query(value = "update UserEntity u set u.password = :password , u.updatedDate=current_timestamp where u.email = :email")
+    void forgotPassword(@Param("password") String password,@Param("email") String email);
+
+
     @Query("SELECT u FROM UserEntity u WHERE " +
             "(:name IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
             "(:email IS NULL OR LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%'))) AND " +

@@ -14,7 +14,7 @@ public enum Permissions {
    GET_ALL_GROUPS(Set.of(UserRole.ADMIN)),
    GET_GROUP(Set.of(UserRole.ADMIN)),
     ADD_STUDENT_TO_GROUP(Set.of(UserRole.ADMIN)),
-    DELETE_STUDENT_TO_GROUP(Set.of(UserRole.ADMIN)),
+    DELETE_STUDENT_IN_GROUP(Set.of(UserRole.ADMIN)),
 
     CREATE_STUDENT(Set.of(UserRole.ADMIN)),
     GET_ALL_STUDENTS(Set.of(UserRole.ADMIN)),
@@ -28,9 +28,10 @@ public enum Permissions {
     CREATE_TEACHER(Set.of(UserRole.SUPER_ADMIN)),
     DELETE_TEACHER(Set.of(UserRole.SUPER_ADMIN)),
     BLOCK_TEACHER(Set.of(UserRole.SUPER_ADMIN)),
+    GET_TEACHER(Set.of(UserRole.SUPER_ADMIN,UserRole.ADMIN)),
 
     CREATE_COURSE(Set.of(UserRole.ADMIN)),
-        UPDATE_COURSE(Set.of(UserRole.ADMIN)),
+    UPDATE_COURSE(Set.of(UserRole.ADMIN)),
     GET_COURSE(Set.of(UserRole.ADMIN,UserRole.STUDENT,UserRole.MENTOR)),
     DELETE_COURSE(Set.of(UserRole.ADMIN)),
 

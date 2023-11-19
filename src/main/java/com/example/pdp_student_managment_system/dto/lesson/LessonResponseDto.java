@@ -21,6 +21,5 @@ public class LessonResponseDto {
     private Integer moduleNumber;
     private LessonStatus lessonStatus;
     private List<StudentAttendanceResponseDto> attendance;
-    private UUID attendanceId;
     private LocalDateTime createdDate;
 }

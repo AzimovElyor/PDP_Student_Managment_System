@@ -1,5 +1,6 @@
 package com.example.pdp_student_managment_system.service;
 
+import com.example.pdp_student_managment_system.dto.PageDto;
 import com.example.pdp_student_managment_system.dto.course.CourseResponseDto;
 import com.example.pdp_student_managment_system.dto.group.GroupRequestDto;
 import com.example.pdp_student_managment_system.dto.group.GroupResponseDto;
@@ -10,9 +11,12 @@ import com.example.pdp_student_managment_system.enums.GroupStatus;
 import com.example.pdp_student_managment_system.enums.GroupType;
 import com.example.pdp_student_managment_system.enums.LessonStatus;
 import com.example.pdp_student_managment_system.enums.UserRole;
+import com.example.pdp_student_managment_system.exception.DataNotFoundException;
 import com.example.pdp_student_managment_system.repository.*;
+import com.example.pdp_student_managment_system.util.MessageConstants;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,18 +57,17 @@ public class GroupService {
     groupRepository.save(group);
     return mapToGroupResponse(group);
   }
-  public List<GroupResponseDto> getAll(Integer page, Integer size){
+  public PageDto<GroupResponseDto> getAll(Integer page, Integer size){
     Pageable pageable = PageRequest.of(page,size);
     Page<Group> all = groupRepository.findAll(pageable);
-   return all.get()
-            .map(this::mapToGroupResponse)
-            .toList();
+
+   return mapPageToPageDto(all);
   }
   public String addStudentToGroup(UUID groupId, UUID studentId){
     Group group = groupRepository.findById(groupId)
             .orElseThrow(() -> new RuntimeException("Group not found or group status finished"));
-    Student student = studentRepository.findById(studentId)
-            .orElseThrow(() -> new RuntimeException("Student not found"));
+    Student student = studentRepository.findByIdAndIsActiveTrue(studentId)
+            .orElseThrow(() -> new RuntimeException(MessageConstants.STUDENT_NOT_FOUND));
     if (group.getGroupStatus() == GroupStatus.FINISHED) {
       throw new RuntimeException("Group is finished");
     }
@@ -81,7 +84,7 @@ public class GroupService {
   }
   public void startGroup(UUID groupId){
     Group group = groupRepository.findById(groupId)
-            .orElseThrow(() -> new RuntimeException("Group not found"));
+            .orElseThrow(() -> new RuntimeException(MessageConstants.GROUP_NOT_FOUND));
     if(group.getGroupStatus() != GroupStatus.CREATED){
       throw new RuntimeException("Group already started or finished");
     }
@@ -97,7 +100,7 @@ public class GroupService {
   }
   public void finishGroup(UUID id){
     Group group = groupRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Group not found"));
+            .orElseThrow(() -> new RuntimeException(MessageConstants.GROUP_NOT_FOUND));
     if(group.getGroupStatus() == GroupStatus.FINISHED){
       throw new RuntimeException("Group already finished");
     }
@@ -105,20 +108,28 @@ public class GroupService {
     groupRepository.save(group);
   }
   public List<GroupResponseDto> getMentorsGroup(UUID mentorId, GroupStatus groupStatus) {
-    userRepository.findById(mentorId)
-            .orElseThrow(() -> new RuntimeException("Mentor not found"));
+    userRepository.findByIdAndIsActiveTrue(mentorId)
+            .orElseThrow(() -> new DataNotFoundException(MessageConstants.MENTOR_NOT_FOUND));
     List<Group> mentorGroups = groupRepository.findByMentorIdAndGroupStatus(mentorId, groupStatus);
     return mentorGroups.stream()
             .map(this::mapToGroupResponse)
             .toList();
   }
   public List<GroupResponseDto> getStudentGroups(UUID studentId, GroupStatus groupStatus){
-    studentRepository.findById(studentId)
-            .orElseThrow(() -> new RuntimeException("Student not found"));
+    studentRepository.findByIdAndIsActiveTrue(studentId)
+            .orElseThrow(() -> new DataNotFoundException(MessageConstants.STUDENT_NOT_FOUND));
     List<Group> studentsGroups = groupRepository.getStudentsGroups(groupStatus, studentId);
     return studentsGroups.stream()
             .map(this::mapToGroupResponse)
             .toList();
+  }
+  public String deleteStudent(UUID groupId, UUID studentId){
+ groupRepository.findById(groupId)
+            .orElseThrow(() -> new DataNotFoundException(MessageConstants.GROUP_NOT_FOUND));
+ studentRepository.findByIdAndIsActiveTrue(studentId)
+            .orElseThrow(() -> new DataNotFoundException(MessageConstants.STUDENT_NOT_FOUND));
+  groupRepository.deleteStudentInGroup(studentId,groupId);
+  return MessageConstants.DELETE;
   }
   private UserResponseDto mapToUserResponse(UserEntity user){
     UserResponseDto userResponseDto = modelMapper.map(user, UserResponseDto.class);
@@ -155,6 +166,24 @@ public class GroupService {
       lessonRepository.save(entity);
     }
 
+  }
+  private PageDto<GroupResponseDto> mapPageToPageDto(Page<Group> groups){
+    PageDto<GroupResponseDto> pageDto = new PageDto<>();
+    pageDto.setContent(
+            groups.getContent()
+                    .stream()
+                    .map(this::mapToGroupResponse)
+                    .toList()
+    );
+    pageDto.setPageNumber(groups.getPageable().getPageNumber());
+    pageDto.setSize(groups.getPageable().getPageSize());
+    pageDto.setLast(pageDto.isLast());
+    pageDto.setFirst(pageDto.isFirst());
+    pageDto.setSorted(groups.getPageable().getSort().isSorted());
+    pageDto.setOffset(groups.getPageable().getOffset());
+    pageDto.setTotalPages(groups.getTotalPages());
+    pageDto.setTotalElements(groups.getTotalElements());
+    return pageDto;
   }
 
 

@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springdoc.core.annotations.ParameterObject;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @Builder
+@ParameterObject
 public class GroupRequestDto {
     @NotBlank(message = "Group name must not be empty or null")
     private String groupName;
