@@ -44,10 +44,12 @@ public class LessonService {
            }
            if (lesson.getLessonNumber().equals(group.getGroupType().getModuleLessons()) && group.getModuleNum().equals(group.getCourse().getDuration())) {
                group.setGroupStatus(GroupStatus.FINISHED);
-               groupRepository.save(group);
            } else if (lesson.getLessonNumber().equals(group.getGroupType().getModuleLessons())) {
-               createNewModuleLessons(lesson.getModuleNumber() + 1, group);
+               group.setModuleNum(group.getModuleNum() +1);
+               createNewModuleLessons( group);
            }
+            groupRepository.save(group);
+
            lesson.setLessonStatus(LessonStatus.FINISHED);
            List<StudentAttendance> studentAttendance = mapAttendanceRequestToEntity(lessonDto.getStudentAttendance());
            lesson.setStudentAttendance(studentAttendance);
@@ -70,11 +72,11 @@ public class LessonService {
 
     }
 
-    public List<LessonResponseDto> getGroupLessons(UUID groupId){
+    public List<LessonResponseDto> getGroupLessons(UUID groupId, Integer moduleNumber){
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new RuntimeException("Group not found"));
-
-        List<Lesson> moduleLessons = lessonRepository.findByGroupIdAndModuleNumber(groupId,group.getModuleNum());
+        if(moduleNumber == null) moduleNumber=group.getModuleNum();
+        List<Lesson> moduleLessons = lessonRepository.findByGroupIdAndModuleNumber(groupId,moduleNumber);
         return moduleLessons.stream()
                 .map(this::mapLessonToResponse)
                 .toList();
@@ -121,9 +123,9 @@ public class LessonService {
                 .orElseThrow(() -> new RuntimeException("Student not found"));
     }
 
-    private void createNewModuleLessons(Integer nextModuleNumber,Group group){
+    private void createNewModuleLessons(Group group){
         for(int i = 1; i <= group.getGroupType().getModuleLessons(); i++ ){
-            Lesson entity = new Lesson(group, i, nextModuleNumber, LessonStatus.CREATED,null);
+            Lesson entity = new Lesson(group, i, group.getModuleNum(), LessonStatus.CREATED,null);
             System.out.println("entity = " + entity);
             lessonRepository.save(entity);
         }

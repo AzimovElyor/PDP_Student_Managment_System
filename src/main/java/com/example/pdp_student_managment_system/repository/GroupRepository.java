@@ -3,6 +3,7 @@ package com.example.pdp_student_managment_system.repository;
 import com.example.pdp_student_managment_system.entity.Group;
 import com.example.pdp_student_managment_system.enums.GroupStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -28,5 +29,10 @@ where gs.students_id = :studentId and g.group_status = :groupStatus
 """,nativeQuery = true)
   Boolean existStudent(@Param("studentId") UUID studentId,
                        @Param("groupId") UUID groupId);
+  @Modifying
+  @Query(value = "delete from groups_students gs " +
+          "where gs.students_id =: studentId and gs.groups_id =: groupId;", nativeQuery = true)
+  void deleteStudentInGroup(@Param("studentId") UUID studentId,
+                            @Param("groupId") UUID groupId);
 
 }

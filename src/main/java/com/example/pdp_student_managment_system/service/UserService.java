@@ -7,12 +7,14 @@ import com.example.pdp_student_managment_system.dto.user.UserSearchDto;
 import com.example.pdp_student_managment_system.entity.UserEntity;
 import com.example.pdp_student_managment_system.repository.UserRepository;
 import com.example.pdp_student_managment_system.util.MessageConstants;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
     public UserResponseDto findById(UUID id){
         UserEntity userEntity = userRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new RuntimeException(MessageConstants.USER_NOT_FOUND_BY_ID.formatted(id)));
@@ -42,6 +45,27 @@ public class UserService {
         Page<UserEntity> getAll = userRepository.getAllByIsActiveTrue(pageable);
         return mapPageToPageDto(getAll);
     }
+    @Transactional
+    public void deleteById(UUID id){
+        userRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() -> new RuntimeException(MessageConstants.USER_NOT_FOUND_BY_ID.formatted(id)));
+        userRepository.deleteUserById(id);
+    }
+    @Transactional
+    public String newUserPassword(UUID id,String oldPassword, String newPassword){
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(MessageConstants.USER_NOT_FOUND_BY_ID.formatted(id)));
+        if(!passwordEncoder.matches(oldPassword,userEntity.getPassword()))
+            throw new RuntimeException("Old password incorrect");
+        userRepository.updatePassword(newPassword,id);
+        return MessageConstants.UPDATE_PASSWORD;
+    }
+
+    @Transactional
+    public String forgotPassword(String email, String newPassword) {
+        userRepository.forgotPassword(email,newPassword);
+        return MessageConstants.UPDATE_PASSWORD;
+    }
 
     private PageDto<UserResponseDto> mapPageToPageDto(Page<UserEntity> page){
         PageDto<UserResponseDto> pageDto = new PageDto<>();
@@ -56,5 +80,6 @@ public class UserService {
         pageDto.setTotalElements(page.getTotalElements());
         return pageDto;
     }
+
 
 }

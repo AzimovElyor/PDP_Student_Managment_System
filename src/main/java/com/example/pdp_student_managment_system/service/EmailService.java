@@ -84,7 +84,7 @@ public class EmailService implements SendingService {
         }
         return password.toString();
     }
-    private void saveMail(String email, String generatePassword){
+    private void    saveMail(String email, String generatePassword){
         Optional<MailVerification> byEmail = maileRepository.findByEmailAndMessageType(email,MessageType.VERIFICATION);
         if(byEmail.isEmpty()){
             maileRepository.save(new MailVerification(email,generatePassword, MessageType.VERIFICATION));

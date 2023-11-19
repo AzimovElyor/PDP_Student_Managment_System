@@ -4,6 +4,7 @@ import com.example.pdp_student_managment_system.dto.PageDto;
 import com.example.pdp_student_managment_system.dto.course.CourseRequestDto;
 import com.example.pdp_student_managment_system.dto.course.CourseResponseDto;
 import com.example.pdp_student_managment_system.service.CourseService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,9 @@ import java.util.UUID;
 public class CourseController {
     private final CourseService courseService;
 @PostMapping("/create")
+@SecurityRequirement(
+        name = "bearerAuth"
+)
 @PreAuthorize("hasAuthority('ADD_COURSE') or hasRole('SUPER_ADMIN')")
     public ResponseEntity<CourseResponseDto> saveCourse(@Valid @RequestBody CourseRequestDto courseRequestDto){
     return new ResponseEntity<>(courseService.save(courseRequestDto), HttpStatus.CREATED);
@@ -31,6 +35,9 @@ public class CourseController {
             @RequestParam(required = false, defaultValue = "7") Integer size) {
     return ResponseEntity.ok(courseService.getAll(page,size));
 }
+    @SecurityRequirement(
+            name = "bearerAuth"
+    )
 @PreAuthorize("hasAuthority('UPDATE_COURSE') or hasRole('SUPER_ADMIN')")
 @PutMapping("/update-duration/{id}")
     public ResponseEntity<CourseResponseDto> updateCourseDuration(

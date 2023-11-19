@@ -1,5 +1,6 @@
 package com.example.pdp_student_managment_system.service;
 
+import com.example.pdp_student_managment_system.dto.ExceptionDto;
 import com.example.pdp_student_managment_system.dto.LoginDto;
 import com.example.pdp_student_managment_system.dto.jwt.JwtResponse;
 import com.example.pdp_student_managment_system.dto.user.UserRequestDto;
@@ -12,8 +13,14 @@ import com.example.pdp_student_managment_system.exception.NoVerificationExceptio
 import com.example.pdp_student_managment_system.jwt.JwtService;
 import com.example.pdp_student_managment_system.repository.UserRepository;
 import com.example.pdp_student_managment_system.util.MessageConstants;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

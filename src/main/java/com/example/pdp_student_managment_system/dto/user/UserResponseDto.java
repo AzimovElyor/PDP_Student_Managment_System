@@ -6,6 +6,7 @@ import com.example.pdp_student_managment_system.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 
 import java.time.LocalDateTime;
 import java.util.Set;
